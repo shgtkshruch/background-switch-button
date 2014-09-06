@@ -1,2 +1,99 @@
 @import "bourbon";
-@import "breakpoint";
+
+// base
+body {
+  margin: 0;
+  padding: 0;
+  display: table-cell;
+  @include size(100vw 100vh);
+  vertical-align: middle;
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+p {
+  margin-bottom: 2em;
+  font-size: 12px;
+  text-transform: uppercase;
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+
+// button base style
+$current-color: deeppink;
+
+%button {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  @extend %l-button;
+  width: 100px;
+  padding: 15px 40px;
+  border: 3px solid $current-color;
+  font-size: 18px;
+  color: $current-color;
+}
+
+%l-button {
+  margin-bottom: 4em;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+// mixin
+@mixin background-switch($direction: width) {
+  &:after {
+    @if ($direction == 'center') {
+      @include position(absolute, 50% null null 50%);
+      transform: translate3d(-50%,-50%,0);
+      $direction: height;
+    } @else {
+      @extend %position-absolute;
+    }
+    @include transition($direction .5s $ease-out-quint);
+  }
+  @extend %background-switch-base;
+}
+
+%position-absolute {
+  @include position(absolute, 0);
+}
+
+%background-switch-base {
+  &:after {
+    content: '';
+    @include size(0px);
+    background-color: $current-color;
+    z-index: -1;
+  }
+  &:hover {
+    color: #fff;
+    &:after {
+      @include size(100%);
+    }
+  }
+}
+
+
+// main style
+.button--horizontal {
+  @extend %button;
+  @include background-switch(width);
+}
+
+.button--vertical {
+  @extend %button;
+  @include background-switch(height);
+}
+
+.button--center {
+  @extend %button;
+  @include background-switch(center);
+}
